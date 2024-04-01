@@ -29,6 +29,7 @@ def add_item(request):
         )
         item.save()
     return render(request, "myapp/additem.html")
+
 def update_item(request, my_id):
     item = Product.objects.get(id=my_id)
     if request.method == "POST":
