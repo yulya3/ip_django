@@ -1,14 +1,19 @@
+from django.conf import settings
+
+
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from .models import Product
-from django.views.generic import ListView
+from django.views.generic import DetailView, ListView
 from django.contrib.auth.decorators import login_required
-def index(request):
-    items = Product.objects.all()
-    context = {
-        'items': items
-    }
-    return render(request, 'myapp\index.html', context)
+
+
+#def index(request):
+    #items = Product.objects.all()
+    #context = {
+        #'items': items
+    #}
+    #return render(request, 'myapp\index.html', context)
 
 
 
@@ -16,16 +21,27 @@ class ProductListView(ListView):
     model = Product
     template_name = "myapp/index.html"
     context_object_name = "items"
-    paginate_by = 2
+    #paginate_by = 2
 
 
-def indexItem(request, my_id):
-    item = Product.objects.get(id=my_id)
-    context = {
-        'item': item
-    }
+#def indexItem(request, my_id):
+    #item = Product.objects.get(id=my_id)
+    #context = {
+        #'item': item
+    #}
 
-    return render(request, 'myapp\detail.html', context=context)
+    #return render(request, 'myapp\detail.html', context=context)
+
+class ProductDetailView(DetailView):
+    model = Product
+    template_name = "myapp/detail.html"
+    context_object_name = "item"
+    pk_url_kwarg = "pk"
+
+    def get_context_data(self, **kwargs):
+        context = super(ProductDetailView, self).get_context_data(**kwargs)
+        context["stripe_publishable_key"] = settings.STRIPE_PUBLISHABLE_KEY
+        return context
 
 
 @login_required
