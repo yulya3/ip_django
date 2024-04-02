@@ -1,13 +1,22 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from .models import Product
-
+from django.views.generic import ListView
+from django.contrib.auth.decorators import login_required
 def index(request):
     items = Product.objects.all()
     context = {
         'items': items
     }
     return render(request, 'myapp\index.html', context)
+
+
+
+class ProductListView(ListView):
+    model = Product
+    template_name = "myapp/index.html"
+    context_object_name = "items"
+    paginate_by = 2
 
 
 def indexItem(request, my_id):
@@ -17,7 +26,9 @@ def indexItem(request, my_id):
     }
 
     return render(request, 'myapp\detail.html', context=context)
-  
+
+
+@login_required
 def add_item(request):
     if request.method == "POST":
         name = request.POST.get("name")
