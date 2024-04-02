@@ -5,6 +5,7 @@ from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from .models import Product
 from django.views.generic import DetailView, ListView
+from django.views.generic.edit import DeleteView
 from django.contrib.auth.decorators import login_required
 
 
@@ -21,7 +22,7 @@ class ProductListView(ListView):
     model = Product
     template_name = "myapp/index.html"
     context_object_name = "items"
-    #paginate_by = 2
+    
 
 
 #def indexItem(request, my_id):
@@ -36,12 +37,7 @@ class ProductDetailView(DetailView):
     model = Product
     template_name = "myapp/detail.html"
     context_object_name = "item"
-    pk_url_kwarg = "pk"
 
-    def get_context_data(self, **kwargs):
-        context = super(ProductDetailView, self).get_context_data(**kwargs)
-        context["stripe_publishable_key"] = settings.STRIPE_PUBLISHABLE_KEY
-        return context
 
 
 @login_required
